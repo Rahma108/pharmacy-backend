@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { BaseRepository } from 'src/common/repository';
 import { MedicineQueryDto } from './dto/medicine-query.dto';
+import { CreateMedicineDto } from './dto/create-medicine.dto';
 
 @Injectable()
 export class MedicineRepository extends BaseRepository<
@@ -16,14 +17,27 @@ export class MedicineRepository extends BaseRepository<
     super(prisma.medicine);
   }
 
+  async createMedicine(data: CreateMedicineDto) {
+  const { categoryId, ...medicineData } = data;
+
+  return this.prisma.medicine.create({
+    data: {
+      ...medicineData,
+
+      category: {
+        connect: {
+          id: categoryId,
+        },
+      },
+    },
+
+    include: {
+      category: true,
+    },
+  });
+}
   async paginateMedicines(query: MedicineQueryDto) {
-  const {
-    page,
-    limit,
-    search,
-    sortBy,
-    sortOrder,
-  } = query;
+  const { page, limit, search } = query;
 
   return this.paginate({
     page,
@@ -42,8 +56,8 @@ export class MedicineRepository extends BaseRepository<
         : {}),
     },
 
-    orderBy: {
-      [sortBy]: sortOrder,
+    include: {
+      category: true,
     },
   });
 }
@@ -73,5 +87,17 @@ export class MedicineRepository extends BaseRepository<
         deletedAt: null,
       },
     });
+}
+
+
+  async findAllWithCategory() {
+  return this.prisma.medicine.findMany({
+    where: {
+      deletedAt: null,
+    },
+    include: {
+      category: true,
+    },
+  });
 }
 }

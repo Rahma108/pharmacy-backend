@@ -3,15 +3,20 @@ import { MedicineRepository } from './medicines.repository';
 import { CreateMedicineDto } from './dto/create-medicine.dto';
 import { UpdateMedicineDto } from './dto/update-medicine.dto';
 import { MedicineQueryDto } from './dto/medicine-query.dto';
+import { CategoryRepository } from '../categories/category.repository';
 
 @Injectable()
     export class MedicinesService {
     constructor(
         private readonly medicineRepository: MedicineRepository,
+          private readonly categoryRepository: CategoryRepository,
     ) {}
      async findAll(query: MedicineQueryDto) {
         return this.medicineRepository.paginateMedicines(query);
         }
+    async findAllWithCategory() {
+        return this.medicineRepository.findAllWithCategory();
+}
 
     async findById(id: number) {
         const medicine = await this.medicineRepository.findById(id);
@@ -51,7 +56,7 @@ import { MedicineQueryDto } from './dto/medicine-query.dto';
     return this.medicineRepository.restore(id);
 }
     async create(data: CreateMedicineDto) {
-    return this.medicineRepository.create(data);
+    return this.medicineRepository.createMedicine(data);
     }
 
     async update(id: number, data: UpdateMedicineDto) {

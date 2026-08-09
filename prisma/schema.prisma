@@ -6,11 +6,23 @@ datasource db {
   provider = "postgresql"
 }
 
-model Medicine {
-  id        Int       @id @default(autoincrement())
-  name      String
-  price     Decimal   @db.Decimal(10, 2)
-  stock     Int       @default(0)
-  createdAt DateTime  @default(now())
-  deletedAt DateTime?
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+
+  medicines Medicine[]
 }
+
+model Medicine {
+  id         Int       @id @default(autoincrement())
+  name       String
+  price      Decimal   @db.Decimal(10, 2)
+  stock      Int       @default(0)
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+}
+

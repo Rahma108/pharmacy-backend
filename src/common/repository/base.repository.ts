@@ -7,13 +7,14 @@ export abstract class BaseRepository<
   constructor(
     protected readonly model: {
       findMany(args?: {
-        skip?: number;
-        take?: number;
-        where?: unknown;
-        orderBy?: unknown;
-      }): Promise<T[]>;
+      skip?: number;
+      take?: number;
+      where?: unknown;
+      orderBy?: unknown;
+      include?: unknown;
+    }): Promise<T[]>;
 
-    count(args?: {
+      count(args?: {
         where?: unknown;
       }): Promise<number>;
 
@@ -60,45 +61,48 @@ export abstract class BaseRepository<
   }
 
   async hardDelete(id: ID): Promise<T> {
-  return this.model.delete({
-    where: { id },
-  });
-}
-
-    async paginate({
-        page = 1,
-        limit = 10,
-        where,
-        orderBy,
-      }: {
-        page?: number;
-        limit?: number;
-        where?: unknown;
-        orderBy?: unknown;
-      }) {
-        const skip = (page - 1) * limit;
-
-        const [data, total] = await Promise.all([
-          this.model.findMany({
-            skip,
-            take: limit,
-            where,
-            orderBy,
-          }),
-
-          this.model.count({
-            where,
-          }),
-        ]);
-
-        return {
-          data,
-          meta: {
-            page,
-            limit,
-            total,
-            totalPages: Math.ceil(total / limit),
-          },
-        };
-      }
+    return this.model.delete({
+      where: { id },
+    });
   }
+
+  async paginate({
+  page = 1,
+  limit = 10,
+  where,
+  orderBy,
+  include,
+}: {
+  page?: number;
+  limit?: number;
+  where?: unknown;
+  orderBy?: unknown;
+  include?: unknown;
+}) {
+  const skip = (page - 1) * limit;
+
+  const [data, total] = await Promise.all([
+    this.model.findMany({
+      skip,
+      take: limit,
+      where,
+      orderBy,
+      include,
+    }),
+
+    this.model.count({
+      where,
+    }),
+  ]);
+
+  return {
+    data,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
+}
+}
