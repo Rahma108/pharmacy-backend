@@ -5,6 +5,9 @@ import { ConfigModule} from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { MedicinesModule } from './modules/medicines/medicines.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { CommonModule } from './common/common.module';
 
 
 @Module({
@@ -14,10 +17,13 @@ import { CategoriesModule } from './modules/categories/categories.module';
       isGlobal: true 
 
     }) ,
-
+     CommonModule,
     PrismaModule,
     MedicinesModule,
     CategoriesModule,
+    UsersModule,
+    AuthModule,
+
    
   
   ],
