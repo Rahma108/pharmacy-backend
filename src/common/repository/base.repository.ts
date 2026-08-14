@@ -81,19 +81,40 @@ export abstract class BaseRepository<
 }) {
   const skip = (page - 1) * limit;
 
-  const [data, total] = await Promise.all([
-    this.model.findMany({
-      skip,
-      take: limit,
-      where,
-      orderBy,
-      include,
-    }),
+  const args: any = {
+    skip,
+    take: limit,
+  };
 
-    this.model.count({
-      where,
-    }),
+  if (where) {
+    args.where = where;
+  }
+
+  if (orderBy) {
+    args.orderBy = orderBy;
+  }
+
+  if (include) {
+    args.include = include;
+  }
+
+  console.log(
+    'FINAL PRISMA ARGS:',
+    JSON.stringify(args, null, 2),
+  );
+
+  const [data, total] = await Promise.all([
+    this.model.findMany(args),
+
+    this.model.count(
+      where
+        ? { where }
+        : {},
+    ),
   ]);
+
+  console.log('FINAL DATA:', data);
+  console.log('FINAL TOTAL:', total);
 
   return {
     data,

@@ -1,20 +1,17 @@
-import { Module } from '@nestjs/common';
-
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-
+import { Module, forwardRef } from '@nestjs/common';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 import { TokenService } from 'src/utils/service';
+
 @Module({
   imports: [
-    UsersModule,
+    forwardRef(() => UsersModule),
     JwtModule.register({}),
   ],
 
-  controllers: [
-    AuthController,
-  ],
+  controllers: [AuthController],
 
   providers: [
     AuthService,
@@ -23,7 +20,7 @@ import { TokenService } from 'src/utils/service';
 
   exports: [
     AuthService,
+    TokenService,
   ],
 })
-
 export class AuthModule {}

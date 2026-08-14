@@ -7,9 +7,3 @@ ADMIN = 'ADMIN',
 PHARMACIST = 'PHARMACIST',
 EMPLOYEE = 'EMPLOYEE',
 }
-
-
-export enum LangEnum {
-  AR = "ar",
-  En = "en",
-}

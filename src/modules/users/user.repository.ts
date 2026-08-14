@@ -32,12 +32,43 @@ super(prisma.user);
 }
 
 async findByEmail(
-email: string,
+  email: string,
 ): Promise<User | null> {
-return this.prisma.user.findUnique({
-where: {
-email,
-},
-});
+  console.log("Searching:", email);
+
+  const user =
+    await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  return user;
 }
+async searchUsers(search: string) {
+  console.log(this.prisma.user);
+
+  const users = await this.prisma.user.findMany({
+ where: {
+  OR: [
+    {
+      name: {
+        equals: search,
+      mode: 'insensitive',
+      },
+    },
+    {
+      email: {
+        equals: search,
+      mode: 'insensitive',
+      },
+    },
+  ],
+}
+});
+
+  console.log(users);
+
+  return users;
+}
+
 }

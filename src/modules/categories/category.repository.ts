@@ -10,30 +10,44 @@ export class CategoryRepository extends BaseRepository<
   { name: string },
   { name?: string }
 > {
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly prisma: PrismaService,
+  ) {
     super(prisma.category);
   }
 
-
-    async findByIdWithMedicines(id: number) {
-    return this.prisma.category.findUnique({
-        where: { id },
-        include: {
-        medicines: {
-            where: {
-            deletedAt: null,
-            },
+  async findByName(name: string) {
+    return this.prisma.category.findFirst({
+      where: {
+        name: {
+          equals: name,
+          mode: 'insensitive',
         },
-        },
+      },
     });
-}
+  }
 
-    async countMedicines(id: number) {
-        return this.prisma.medicine.count({
-            where: {
-            categoryId: id,
+  async findByIdWithMedicines(id: number) {
+    return this.prisma.category.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        medicines: {
+          where: {
             deletedAt: null,
-            },
-        });
-}
+          },
+        },
+      },
+    });
+  }
+
+  async countMedicines(id: number) {
+    return this.prisma.medicine.count({
+      where: {
+        categoryId: id,
+        deletedAt: null,
+      },
+    });
+  }
 }

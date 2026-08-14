@@ -1,10 +1,7 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsOptional,
-  IsString,
   IsStrongPassword,
-  Length,
   Matches,
   ValidateIf,
 } from 'class-validator';
@@ -33,27 +30,6 @@ export class LoginDTO {
 
   FCM?: string;
 }
-
-export class SignupDTO extends LoginDTO {
-  @Length(2, 20, { message: 'Invalid range is 2 - 20' })
-  name!: string;
-
-  @ValidateIf((o) => o.password !== undefined)
-  @IsMatch('password', {
-    message: 'Password do not match with confirmPassword',
-  })
-  confirmPassword!: string;
-}
-
-
-export class SignupWithGoogleDTO  {
-  @IsString()
-  @IsNotEmpty()
-  idToken !:string;
-
-}
-
-
 export class VerifyEmailDTO {
   @IsEmail({}, { message: 'Please enter your email' })
   email!: string;

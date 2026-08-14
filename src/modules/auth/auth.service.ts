@@ -24,22 +24,20 @@ import {
   ConfirmEmailDTO,
   LoginDTO,
   ResetForgotPasswordDTO,
-  SignupDTO,
 } from './dto/create-auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly configService: ConfigService,
     private readonly tokenService: TokenService,
     private readonly emailService: EmailService,
     private readonly userRepository: UserRepository,
     private readonly redis: CacheService,
   ) {}
 
-  // =========================================================
+  // 
   // Generate + Send OTP
-  // =========================================================
+  // 
 
   private async sendOtp(
     email: string,
@@ -61,9 +59,9 @@ export class AuthService {
       type,
     });
 
-    // -------------------------------------------------------
+    // 
     // Check temporary block
-    // -------------------------------------------------------
+    // 
 
     const blockTTL = await this.redis.ttl(blockKey);
 
@@ -73,9 +71,9 @@ export class AuthService {
       );
     }
 
-    // -------------------------------------------------------
+    // 
     // Check existing OTP
-    // -------------------------------------------------------
+    // 
 
     const otpTTL = await this.redis.ttl(otpKey);
 
@@ -85,9 +83,9 @@ export class AuthService {
       );
     }
 
-    // -------------------------------------------------------
+    // 
     // Check maximum requests
-    // -------------------------------------------------------
+    // 
 
     const requestCount = Number(
       (await this.redis.get<number>(requestKey)) ?? 0,
@@ -105,24 +103,24 @@ export class AuthService {
       );
     }
 
-    // -------------------------------------------------------
+    // 
     // Generate OTP
-    // -------------------------------------------------------
+    // 
 
     const code = await createNumberOtp();
 
-    // -------------------------------------------------------
+    // 
     // Hash OTP
-    // -------------------------------------------------------
+    // 
 
     const hashedOtp = await bcrypt.hash(
       code.toString(),
       10,
     );
 
-    // -------------------------------------------------------
+    // 
     // Store OTP in Redis for 2 minutes
-    // -------------------------------------------------------
+    // 
 
     await this.redis.set({
       key: otpKey,
@@ -130,9 +128,9 @@ export class AuthService {
       ttl: 120,
     });
 
-    // -------------------------------------------------------
+    // 
     // Send Email
-    // -------------------------------------------------------
+    // 
 
     await this.emailService.sendEmail({
       to: email,
@@ -143,9 +141,9 @@ export class AuthService {
       }),
     });
 
-    // -------------------------------------------------------
+    // 
     // Increase request count
-    // -------------------------------------------------------
+    // 
 
     if (requestCount > 0) {
       await this.redis.increment(requestKey);
@@ -158,213 +156,61 @@ export class AuthService {
     }
   }
 
-  // =========================================================
-  // Register
-  // =========================================================
-
-  async register(data:  SignupDTO) {
-    const existingUser =
-      await this.userRepository.findByEmail(data.email);
-
-    if (existingUser) {
-      throw new ConflictException(
-        'Email already exists.',
-      );
-    }
-
-    const hashedPassword = await bcrypt.hash(
-      data.password,
-      10,
-    );
-
-    const user =
-      await this.userRepository.create({
-        name: data.name,
-        email: data.email,
-        password: hashedPassword,
-      });
-
-    if (!user) {
-      throw new BadRequestException(
-        'Failed to create user.',
-      );
-    }
-
-    // Send verification email asynchronously
-    emailEmitter.emit(
-      'sendEmail',
-      async () => {
-        await this.sendOtp(
-          user.email,
-          EmailEnum.confirmEmail,
-          'Verify Account',
-        );
-      },
-    );
-
-    const {
-      password,
-      ...safeUser
-    } = user;
-
-    return {
-      message:
-        'Registration successful. Please verify your email.',
-      user: safeUser,
-    };
-  }
-
-  // =========================================================
-  // Confirm Email
-  // =========================================================
-
-  async confirmEmail(
-    data: ConfirmEmailDTO,
-  ): Promise<{ message: string }> {
-    const user =
-      await this.userRepository.findByEmail(
-        data.email,
-      );
-
-    if (!user) {
-      throw new NotFoundException(
-        'Account not found.',
-      );
-    }
-
-    if (user.isVerified) {
-      throw new ConflictException(
-        'Email is already verified.',
-      );
-    }
-
-    const otpKey =
-      this.redis.otpKey({
-        email: data.email,
-        type: EmailEnum.confirmEmail,
-      });
-    // IMPORTANT: Redis value is a string
-    const hashedOtp =
-      await this.redis.get<string>(otpKey);
-
-    if (!hashedOtp) {
-      throw new BadRequestException(
-        'OTP expired or does not exist.',
-      );
-    }
-
-    const isValid =
-      await bcrypt.compare(
-        data.otp.toString(),
-        hashedOtp,
-      );
-
-    if (!isValid) {
-      throw new BadRequestException(
-        'Invalid OTP.',
-      );
-    }
-
-    await this.userRepository.update(
-      user.id,
-      {
-        isVerified: true,
-      },
-    );
-
-    await this.redis.deleteKeys(otpKey);
-
-    return {
-      message:
-        'Email verified successfully.',
-    };
-  }
-
-  // =========================================================
-  // Resend Verification Email
-  // =========================================================
-
-  async resendVerificationEmail(
-    email: string,
-  ): Promise<void> {
-    const user =
-      await this.userRepository.findByEmail(
-        email,
-      );
-
-    if (!user) {
-      throw new NotFoundException(
-        'Account not found.',
-      );
-    }
-
-    if (user.isVerified) {
-      throw new ConflictException(
-        'Email is already verified.',
-      );
-    }
-
-    await this.sendOtp(
-      email,
-      EmailEnum.confirmEmail,
-      'Verify Account',
-    );
-  }
-
-  // =========================================================
   // Login
-  // =========================================================
-
   async login(data: LoginDTO) {
-    const user =
-      await this.userRepository.findByEmail(
-        data.email,
-      );
+  const user =
+    await this.userRepository.findByEmail(
+      data.email,
+    );
 
-    if (!user) {
-      throw new UnauthorizedException(
-        'Invalid email or password.',
-      );
-    }
-
-    if (!user.isVerified) {
-      throw new UnauthorizedException(
-        'Please verify your email first.',
-      );
-    }
-
-    const isPasswordValid =
-      await bcrypt.compare(
-        data.password,
-        user.password,
-      );
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException(
-        'Invalid email or password.',
-      );
-    }
-
-    const tokens =
-      await this.tokenService.createLoginCredentials(
-        user,
-        'pharmacy-api',
-      );
-
-    const {
-      password,
-      ...safeUser
-    } = user;
-
-    return {
-      user: safeUser,
-      ...tokens,
-    };
+  if (!user) {
+    throw new UnauthorizedException(
+      'Invalid email or password.',
+    );
   }
 
-  // =========================================================
+  if (!user.isVerified) {
+    throw new UnauthorizedException(
+      'Please verify your email first.',
+    );
+  }
+
+  const isPasswordValid =
+    await bcrypt.compare(
+      data.password,
+      user.password,
+    );
+
+  if (!isPasswordValid) {
+    throw new UnauthorizedException(
+      'Invalid email or password.',
+    );
+  }
+
+  const tokens =
+    await this.tokenService.createLoginCredentials(
+      user,
+      'pharmacy-api',
+    );
+
+  const {
+    password,
+    ...safeUser
+  } = user;
+
+  return {
+    message: 'Login successful. ✅',
+    data: {
+      user: safeUser,
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+    },
+  };
+}
+
+  // 
   // Forgot Password - Request OTP
-  // =========================================================
+  // 
 
   async forgotPassword(
     email: string,
@@ -398,9 +244,9 @@ export class AuthService {
     );
   }
 
-  // =========================================================
+  // 
   // Verify Forgot Password OTP
-  // =========================================================
+  // 
 
   async verifyForgotPasswordOtp(
     data: ConfirmEmailDTO,
@@ -433,9 +279,9 @@ export class AuthService {
     }
   }
 
-  // =========================================================
+  // 
   // Reset Password
-  // =========================================================
+  // 
 
   async resetPassword(
     data: ResetForgotPasswordDTO,

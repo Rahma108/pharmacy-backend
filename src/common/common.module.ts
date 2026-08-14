@@ -1,9 +1,13 @@
 import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+
 import { RedisModule } from './redis.module';
-import { CacheService, EmailService} from 'src/utils/service';
 
-
+import {
+  CacheService,
+  EmailService,
+  SecurityService,
+} from 'src/utils/service';
 
 @Global()
 @Module({
@@ -15,11 +19,15 @@ import { CacheService, EmailService} from 'src/utils/service';
   providers: [
     CacheService,
     EmailService,
+    SecurityService,
+    
   ],
 
   exports: [
     CacheService,
     EmailService,
+    SecurityService,
+
   ],
 })
 export class CommonModule {}

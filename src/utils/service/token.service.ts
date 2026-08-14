@@ -1,5 +1,7 @@
 import {
 BadRequestException,
+  forwardRef,
+  Inject,
 Injectable,
 UnauthorizedException,
 } from '@nestjs/common';
@@ -29,7 +31,8 @@ constructor(
 private readonly jwtService: JwtService,
 private readonly configService: ConfigService,
 private readonly redisService: CacheService,
-private readonly userRepository: UserRepository,
+ @Inject(forwardRef(() => UserRepository))
+  private readonly userRepository: UserRepository,
 ) {
 this.ACCESS_EXPIRES_IN = Number(
   this.configService.get('ACCESS_EXPIRES_IN'),

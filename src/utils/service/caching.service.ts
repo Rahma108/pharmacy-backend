@@ -251,14 +251,14 @@ return `${this.baseRevokeTokenKey(userId)}::${jti}`;
 
 otpKey({
 email,
-type = EmailEnum.confirmEmail,
+type 
 }: BaseKeyType): string {
 return `OTP:USER::${email}::${type}`;
 }
 
 otpMaxRequestKey({
 email,
-type = EmailEnum.confirmEmail,
+type 
 }: BaseKeyType): string {
 return `${this.otpKey({
       email,
@@ -268,7 +268,7 @@ return `${this.otpKey({
 
 otpBlockKey({
 email,
-type = EmailEnum.confirmEmail,
+type 
 }: BaseKeyType): string {
 return `${this.otpKey({
       email,
