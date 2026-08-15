@@ -14,6 +14,7 @@ number,
   password: string;
   role?: User['role'];
   isVerified?: boolean;
+  isActive?: boolean;
   refreshTokenHash?: string | null;
 },
 {
@@ -22,6 +23,7 @@ email?: string;
 password?: string;
 role?: User['role'];
 isVerified?: boolean;
+isActive?: boolean;
 refreshTokenHash?: string | null;
 }
 >{

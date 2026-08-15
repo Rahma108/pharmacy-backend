@@ -50,4 +50,35 @@ export class CategoryRepository extends BaseRepository<
       },
     });
   }
+
+
+//   async softDelete(id: number) {
+//   return this.prisma.category.update({
+//     where: {
+//       id,
+//     },
+//     data: {
+//       deletedAt: new Date(),
+//     },
+//   });
+// }
+
+// async restore(id: number) {
+//   return this.prisma.category.update({
+//     where: {
+//       id,
+//     },
+//     data: {
+//       deletedAt: null,
+//     },
+//   });
+// }
+
+// async permanentDelete(id: number) {
+//   return this.prisma.category.delete({
+//     where: {
+//       id,
+//     },
+//   });
+// }
 }
