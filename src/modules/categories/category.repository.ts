@@ -16,6 +16,13 @@ export class CategoryRepository extends BaseRepository<
     super(prisma.category);
   }
 
+   async findActive() {
+    return this.prisma.category.findMany({
+      where: {
+        deletedAt: null,
+      },
+    });
+}
   async findByName(name: string) {
     return this.prisma.category.findFirst({
       where: {
@@ -52,33 +59,33 @@ export class CategoryRepository extends BaseRepository<
   }
 
 
-//   async softDelete(id: number) {
-//   return this.prisma.category.update({
-//     where: {
-//       id,
-//     },
-//     data: {
-//       deletedAt: new Date(),
-//     },
-//   });
-// }
+  async softDelete(id: number) {
+  return this.prisma.category.update({
+    where: {
+      id,
+    },
+    data: {
+      deletedAt: new Date(),
+    },
+  });
+}
 
-// async restore(id: number) {
-//   return this.prisma.category.update({
-//     where: {
-//       id,
-//     },
-//     data: {
-//       deletedAt: null,
-//     },
-//   });
-// }
+async restore(id: number) {
+  return this.prisma.category.update({
+    where: {
+      id,
+    },
+    data: {
+      deletedAt: null,
+    },
+  });
+}
 
-// async permanentDelete(id: number) {
-//   return this.prisma.category.delete({
-//     where: {
-//       id,
-//     },
-//   });
-// }
+async permanentDelete(id: number) {
+  return this.prisma.category.delete({
+    where: {
+      id,
+    },
+  });
+}
 }

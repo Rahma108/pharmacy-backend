@@ -42,16 +42,16 @@ export class CategoriesService {
     };
   }
 
-  async findAll() {
-    const categories =
-      await this.categoryRepository.findAll();
+ async findAll() {
+  const categories =
+    await this.categoryRepository.findActive();
 
-    return {
-      message:
-        'Categories retrieved successfully ✅',
-      data: categories,
-    };
-  }
+  return {
+    message:
+      'Categories retrieved successfully ✅',
+    data: categories,
+  };
+}
 
   async findById(id: number) {
     const category =
@@ -110,30 +110,69 @@ export class CategoriesService {
   }
 
   async remove(id: number) {
-    await this.findById(id);
+  await this.findById(id);
 
-    const medicinesCount =
-      await this.categoryRepository.countMedicines(
-        id,
-      );
+  const medicinesCount =
+    await this.categoryRepository.countMedicines(id);
 
-    if (medicinesCount > 0) {
-      throw new ConflictException(
-        'Cannot delete category because it has medicines ❌',
-      );
-    }
-
-    const deletedCategory =
-      await this.categoryRepository.hardDelete(
-        id,
-      );
-
-    return {
-      message:
-        'Category deleted successfully ✅',
-      data: deletedCategory,
-    };
+  if (medicinesCount > 0) {
+    throw new ConflictException(
+      'Cannot delete category because it has medicines ❌',
+    );
   }
+
+  const deletedCategory =
+    await this.categoryRepository.softDelete(id);
+
+  return {
+    message: 'Category deleted successfully ✅',
+    data: deletedCategory,
+  };
+}
+
+  async restore(id: number) {
+  const category =
+    await this.categoryRepository.findById(id);
+
+  if (!category) {
+    throw new NotFoundException(
+      'Category not found ❌',
+    );
+  }
+
+  if (!category.deletedAt) {
+    throw new ConflictException(
+      'Category is already active ❌',
+    );
+  }
+
+  const restoredCategory =
+    await this.categoryRepository.restore(id);
+
+  return {
+    message: 'Category restored successfully ✅',
+    data: restoredCategory,
+  };
+}
+  async permanentDelete(id: number) {
+  const category =
+    await this.categoryRepository.findById(id);
+
+  if (!category) {
+    throw new NotFoundException(
+      'Category not found ❌',
+    );
+  }
+
+  const deletedCategory =
+    await this.categoryRepository.permanentDelete(id);
+
+  return {
+    message:
+      'Category permanently deleted successfully ✅',
+    data: deletedCategory,
+  };
+}
 
   async findByIdWithMedicines(
     id: number,

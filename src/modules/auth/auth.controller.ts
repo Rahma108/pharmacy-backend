@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Patch,
   Post,
+  Headers
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
@@ -16,6 +17,9 @@ import {
   ResetForgotPasswordDTO,
   VerifyEmailDTO,
 } from './dto/create-auth.dto';
+import { Credentials } from 'src/common/decorator/credentials.decorator';
+import { Auth } from 'src/common/decorator';
+import { RoleEnum } from 'src/common/enum';
 
 
 @Controller('auth')
@@ -35,6 +39,35 @@ export class AuthController {
   ) {
     return this.authService.login(body);
   }
+
+@Post('refresh-token')
+refreshToken(
+  @Headers('authorization')
+  authorization: string,
+) {
+  const refreshToken =
+    authorization.replace(
+      'Bearer ',
+      '',
+    );
+
+  return this.authService.refreshToken(
+    refreshToken,
+  );
+}
+@Post('logout')
+@Auth([
+  RoleEnum.ADMIN,
+  RoleEnum.PHARMACIST,
+  RoleEnum.EMPLOYEE,
+])
+logout(
+  @Credentials() { user }: any,
+) {
+  return this.authService.logout(
+    user.id,
+  );
+}
   // 
   // Request Forgot Password OTP
   // 

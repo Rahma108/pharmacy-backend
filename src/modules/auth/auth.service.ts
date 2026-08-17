@@ -8,7 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 
-import { EmailEnum } from 'src/common/enum';
+import { EmailEnum, TokenTypeEnum } from 'src/common/enum';
 import { emailEmitter } from 'src/common/events';
 
 import {
@@ -193,6 +193,20 @@ export class AuthService {
       'pharmacy-api',
     );
 
+
+    const refreshTokenHash =
+      await bcrypt.hash(
+        tokens.refresh_token,
+        10,
+      );
+
+    await this.userRepository.update(
+      user.id,
+      {
+        refreshTokenHash,
+      },
+    );
+
   const {
     password,
     ...safeUser
@@ -205,6 +219,84 @@ export class AuthService {
       access_token: tokens.access_token,
       refresh_token: tokens.refresh_token,
     },
+  };
+}
+
+
+// =========================
+// Refresh Token
+// =========================
+
+async refreshToken(
+  refreshToken: string,
+) {
+  const { user } =
+    await this.tokenService.decodeToken({
+      token: refreshToken,
+      tokenType: TokenTypeEnum.refresh,
+    });
+
+  if (!user.refreshTokenHash) {
+    throw new UnauthorizedException(
+      'Please login again.',
+    );
+  }
+
+  const isValid =
+    await bcrypt.compare(
+      refreshToken,
+      user.refreshTokenHash,
+    );
+
+  if (!isValid) {
+    throw new UnauthorizedException(
+      'Invalid refresh token.',
+    );
+  }
+
+  const tokens =
+    await this.tokenService.createLoginCredentials(
+      user,
+      'pharmacy-api',
+    );
+
+  const refreshTokenHash =
+    await bcrypt.hash(
+      tokens.refresh_token,
+      10,
+    );
+
+  await this.userRepository.update(
+    user.id,
+    {
+      refreshTokenHash,
+    },
+  );
+
+  return {
+    message:
+      'Token refreshed successfully. ✅',
+    data: tokens,
+  };
+}
+
+// =========================
+// Logout
+// =========================
+
+async logout(
+  userId: number,
+) {
+  await this.userRepository.update(
+    userId,
+    {
+      refreshTokenHash: null,
+    },
+  );
+
+  return {
+    message:
+      'Logged out successfully. ✅',
   };
 }
 
