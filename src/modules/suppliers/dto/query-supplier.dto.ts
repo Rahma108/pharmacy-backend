@@ -18,16 +18,19 @@ export class QuerySupplierDto {
   @IsInt()
   @Min(1)
   page: number = 1;
-
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
   @Max(100)
   limit: number = 10;
-
-  @IsOptional()
-  @Transform(({ value }) => value === 'true')
-  @IsBoolean()
-  isActive?: boolean;
+    @IsOptional()
+    @Transform(({ value }) => {
+      if (value === undefined) {
+        return undefined;
+      }
+      return value === 'true';
+    })
+    @IsBoolean()
+    isActive?: boolean;
 }

@@ -89,7 +89,6 @@ export class SuppliersController {
       id,
     );
   }
-
   @Patch(':id/restore')
   @Auth([RoleEnum.ADMIN])
   restore(
@@ -99,7 +98,6 @@ export class SuppliersController {
       id,
     );
   }
-
   @Delete(':id/permanent')
   @Auth([RoleEnum.ADMIN])
   hardDelete(

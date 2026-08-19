@@ -39,13 +39,13 @@ export class SupplierRepository extends BaseRepository<
                 {
                   name: {
                     contains: search,
-                    mode: 'insensitive',
+                    // mode: 'insensitive',
                   },
                 },
                 {
                   companyName: {
                     contains: search,
-                    mode: 'insensitive',
+                    // mode: 'insensitive',
                   },
                 },
                 {
