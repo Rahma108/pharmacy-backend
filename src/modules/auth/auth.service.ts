@@ -223,9 +223,9 @@ export class AuthService {
 }
 
 
-// =========================
+
 // Refresh Token
-// =========================
+
 
 async refreshToken(
   refreshToken: string,
@@ -280,9 +280,9 @@ async refreshToken(
   };
 }
 
-// =========================
+
 // Logout
-// =========================
+
 
 async logout(
   userId: number,

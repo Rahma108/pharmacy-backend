@@ -8,6 +8,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CommonModule } from './common/common.module';
+import { SuppliersModule } from './modules/suppliers/suppliers.module';
 
 
 @Module({
@@ -23,6 +24,7 @@ import { CommonModule } from './common/common.module';
     CategoriesModule,
     UsersModule,
     AuthModule,
+    SuppliersModule,
 
    
   

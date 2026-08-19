@@ -71,6 +71,7 @@ export class MedicinesController {
         RoleEnum.PHARMACIST,
     ])
     update(
+
         @Param('id', ParseIntPipe) id: number,
         @Body() dto: UpdateMedicineDto,
     ) {

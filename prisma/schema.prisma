@@ -13,7 +13,7 @@ model User {
   password         String
   role             Role     @default(EMPLOYEE)
   isVerified       Boolean  @default(false)
-  isActive Boolean @default(true)
+  isActive         Boolean  @default(true)
   refreshTokenHash String?
   createdAt        DateTime @default(now())
 }
@@ -22,7 +22,7 @@ model Category {
   id        Int        @id @default(autoincrement())
   name      String     @unique
   createdAt DateTime   @default(now())
-  deletedAt  DateTime?
+  deletedAt DateTime?
   medicines Medicine[]
 }
 
@@ -33,8 +33,51 @@ model Medicine {
   stock      Int       @default(0)
   createdAt  DateTime  @default(now())
   deletedAt  DateTime?
+
   categoryId Int
   category   Category  @relation(fields: [categoryId], references: [id])
+
+  suppliers  MedicineSupplier[]
+
+  @@index([name])
+  @@index([categoryId])
+}
+
+model Supplier {
+  id                 Int       @id @default(autoincrement())
+  name               String
+  companyName        String?
+  phone              String
+  alternativePhone   String?
+  email              String?
+  address            String?
+  taxNumber          String?
+  commercialRegister String?
+  contactPerson      String?
+  notes              String?
+  isActive           Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
+
+  medicines           MedicineSupplier[]
+
+  @@index([name])
+  @@index([phone])
+  @@index([isActive])
+}
+
+model MedicineSupplier {
+  medicineId Int
+  supplierId Int
+
+  medicine Medicine @relation(fields: [medicineId], references: [id])
+  supplier Supplier @relation(fields: [supplierId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@id([medicineId, supplierId])
+  @@index([supplierId])
 }
 
 enum Role {
