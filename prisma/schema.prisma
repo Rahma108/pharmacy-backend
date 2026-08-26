@@ -27,17 +27,18 @@ model Category {
 }
 
 model Medicine {
-  id         Int       @id @default(autoincrement())
-  name       String
-  price      Decimal   @db.Decimal(10, 2)
-  stock      Int       @default(0)
-  createdAt  DateTime  @default(now())
-  deletedAt  DateTime?
+  id        Int       @id @default(autoincrement())
+  name      String
+  price     Decimal   @db.Decimal(10, 2)
+  stock     Int       @default(0)
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
 
   categoryId Int
-  category   Category  @relation(fields: [categoryId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
 
-  suppliers  MedicineSupplier[]
+  suppliers             MedicineSupplier[]
+  inventoryTransactions InventoryTransaction[]
 
   @@index([name])
   @@index([categoryId])
@@ -56,11 +57,12 @@ model Supplier {
   contactPerson      String?
   notes              String?
   isActive           Boolean   @default(true)
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  deletedAt           DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
 
-  medicines           MedicineSupplier[]
+  medicines             MedicineSupplier[]
+  inventoryTransactions InventoryTransaction[]
 
   @@index([name])
   @@index([phone])
@@ -78,6 +80,32 @@ model MedicineSupplier {
 
   @@id([medicineId, supplierId])
   @@index([supplierId])
+}
+
+model InventoryTransaction {
+  id         Int                      @id @default(autoincrement())
+  medicineId Int
+  supplierId Int?
+  type       InventoryTransactionType
+  quantity   Int
+  unitPrice  Decimal?                 @db.Decimal(10, 2)
+  reason     String?
+  notes      String?
+  createdAt  DateTime                 @default(now())
+
+  medicine Medicine  @relation(fields: [medicineId], references: [id])
+  supplier Supplier? @relation(fields: [supplierId], references: [id])
+
+  @@index([medicineId])
+  @@index([supplierId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum InventoryTransactionType {
+  STOCK_IN
+  STOCK_OUT
+  ADJUSTMENT
 }
 
 enum Role {
