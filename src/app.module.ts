@@ -9,6 +9,12 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { SuppliersModule } from './modules/suppliers/suppliers.module';
+import { InventoryModule } from './modules/inventory/inventory.module';
+import { SalesModule } from './modules/sales/sales.module';
+import { BarcodeModule } from './modules/barcode/barcode.module';
+import { BarcodeController } from './modules/barcode/barcode.controller';
+import { BarcodeService } from './modules/barcode/barcode.service';
+import { InvoicesModule } from './modules/invoices/invoices.module';
 
 
 @Module({
@@ -18,18 +24,22 @@ import { SuppliersModule } from './modules/suppliers/suppliers.module';
       isGlobal: true 
 
     }) ,
-     CommonModule,
+    CommonModule,
     PrismaModule,
     MedicinesModule,
     CategoriesModule,
     UsersModule,
     AuthModule,
     SuppliersModule,
+    InventoryModule,
+    SalesModule,
+    BarcodeModule,
+    InvoicesModule ,
 
    
   
   ],
-  controllers: [AppController ],
-  providers: [AppService ],
+  controllers: [AppController, BarcodeController ],
+  providers: [AppService, BarcodeService ],
 })
 export class AppModule {}
