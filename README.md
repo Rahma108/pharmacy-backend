@@ -1,98 +1,162 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🏥 AI Pharmacy Management System
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A backend system for managing pharmacy operations, medicines, inventory, suppliers, sales, and invoices, with planned AI-powered insights and WhatsApp integration.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Project Overview
 
-## Description
+The **AI Pharmacy Management System** aims to simplify pharmacy operations, improve inventory management, track sales, and provide useful insights for pharmacy administrators and pharmacists.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The project is built with NestJS, TypeScript, PostgreSQL, and Prisma ORM, following a modular backend architecture.
 
-## Project setup
+## 🛠️ Tech Stack
+
+- **Backend:** NestJS, Node.js, TypeScript
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+- **Authentication & Authorization:** JWT-based authentication and role-based access control
+- **API Documentation:** Swagger — planned for final documentation and verification
+- **Integrations:** WhatsApp Business Cloud API — planned
+- **AI:** Inventory demand prediction and sales insights — planned
+
+## 📦 Core Modules
+
+| Module | Description | Status |
+|---|---|---|
+| Authentication | User authentication and access control | Implemented; testing status to be confirmed |
+| Users | User management | Implemented; testing status to be confirmed |
+| Roles | Role-based permissions | Implemented; testing status to be confirmed |
+| Medicines | Medicine management, pricing, and stock | Implemented; testing status to be confirmed |
+| Categories | Medicine category management | Implemented; testing status to be confirmed |
+| Suppliers | Supplier information and management | Implemented; testing status to be confirmed |
+| Inventory | Stock movements and inventory transactions | Implemented; testing status to be confirmed |
+| Barcode Scanner | Medicine lookup using barcodes | Implementation/testing to be verified |
+| Sales | Sales transactions, payment calculations, and stock updates | Implemented; testing status to be confirmed |
+| Invoices | Invoice retrieval based on sales records | Implemented; testing status to be confirmed |
+| Reports | Sales and inventory analytics | In progress |
+| Dashboard | Summary statistics for administrators and pharmacists | Planned |
+| WhatsApp Integration | Notifications, scheduled reports, and chatbot | Planned |
+| AI Features | Stock prediction and sales analysis | Planned |
+
+## 📊 Reports Module
+
+The Reports module is being developed to provide insights based on actual database records.
+
+Planned endpoints:
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/reports/sales` | Sales totals and transaction count within a date range |
+| GET | `/reports/top-medicines` | Best-selling medicines |
+| GET | `/reports/inventory` | Inventory summary and low-stock medicines |
+
+The sales report is designed to include total sales, total paid amounts, returned change, and the number of sales transactions.
+
+**Status:** Implementation and endpoint testing are pending confirmation.
+
+## 📈 Dashboard
+
+The Dashboard will provide a consolidated overview of pharmacy performance.
+
+Planned statistics include:
+
+- Total sales for the current day and selected periods
+- Number of sales transactions
+- Inventory summary
+- Low-stock and out-of-stock medicines
+- Best-selling medicines
+- Key sales and inventory indicators
+
+Dashboard statistics will be calculated from existing database records rather than hardcoded values.
+
+## 💬 WhatsApp Integration — Planned
+
+The planned integration will use the official WhatsApp Business Platform Cloud API.
+
+Potential features include:
+
+- Low-stock and out-of-stock alerts
+- Daily and weekly sales reports
+- Supplier reorder notifications
+- Invoice delivery
+- Customer chatbot and human handoff
+- Manager approval workflows
+
+## 🤖 AI Features — Planned
+
+- **Predictive Inventory Management:** Estimate which medicines may run out based on historical sales and stock levels.
+- **Sales Analysis:** Identify sales trends and changes in medicine demand.
+- **Reorder Suggestions:** Recommend replenishment quantities using demand estimates and inventory information.
+- **AI Pharmacy Assistant:** Support approved pharmacy information workflows with appropriate safety controls.
+
+AI predictions and reorder recommendations will require validation against actual project data before being used operationally.
+
+## 🔐 Security
+
+The system is designed to support:
+
+- JWT-based authentication
+- Role-based access control
+- Restricted access to administrative operations
+- Validation of incoming requests
+- Secure handling of credentials and environment variables
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+- Node.js
+- npm
+- PostgreSQL database
+- Git
+
+### Installation
+
+Clone the repository:
 
 ```bash
-$ npm install
+git clone <YOUR_GITHUB_REPOSITORY_URL>
+cd pharmacy-backend
+npm install
 ```
 
-## Compile and run the project
+Configure the required environment variables in a local `.env` file. Use the variable names expected by the project configuration, including `DATABASE_URL` where applicable.
+
+Do not commit `.env` files, database credentials, JWT secrets, or API access tokens.
+
+### Run the Application
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run start:dev
 ```
 
-## Run tests
+Use the configured local port and API routes to test the application.
 
-```bash
-# unit tests
-$ npm run test
+## 🧪 Testing
 
-# e2e tests
-$ npm run test:e2e
+The final testing phase will cover:
 
-# test coverage
-$ npm run test:cov
-```
+- Authentication and role permissions
+- Medicine and supplier operations
+- Inventory transactions and stock consistency
+- Sales calculations and invoice retrieval
+- Report accuracy and date filters
+- Dashboard statistics
+- WhatsApp integration and error handling
 
-## Deployment
+Only features that have passed testing should be marked as fully completed.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 🗺️ Roadmap
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- [x] Core module implementation — subject to final verification
+- [ ] Complete and test Reports endpoints
+- [ ] Implement and test Dashboard statistics
+- [ ] Complete API documentation with Swagger
+- [ ] Integrate WhatsApp notifications and reporting
+- [ ] Develop AI-powered inventory prediction
+- [ ] Add comprehensive testing
+- [ ] Docker configuration
+- [ ] Deployment and production configuration
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+## 👩‍💻 Project Goal
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Build a modular pharmacy management backend that combines reliable inventory and sales operations with automation, analytics, and AI-assisted decision support.
