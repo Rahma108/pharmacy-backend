@@ -22,6 +22,18 @@ export class InventoryController {
     private readonly inventoryService: InventoryService,
   ) {}
 
+
+
+  
+    @Get('low-stock/prediction')
+    @Auth([
+      RoleEnum.ADMIN,
+      RoleEnum.PHARMACIST,
+    ])
+    predictLowStock() {
+      return this.inventoryService.predictLowStock();
+    }
+
   @Get()
   @Auth([
     RoleEnum.ADMIN,

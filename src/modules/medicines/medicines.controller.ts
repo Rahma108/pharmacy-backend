@@ -1,13 +1,13 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-  Query,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Post,
+    Query,
 } from '@nestjs/common';
 
 import { MedicinesService } from './medicines.service';
@@ -17,6 +17,7 @@ import { MedicineQueryDto } from './dto/medicine-query.dto';
 
 import { Auth } from 'src/common/decorator';
 import { RoleEnum } from 'src/common/enum';
+import { CheckDrugInteractionsDto } from './dto/check-drug-interactions.dto';
 
 @Controller('medicines')
 export class MedicinesController {
@@ -51,6 +52,25 @@ export class MedicinesController {
         id,
         );
     }
+    @Get(':id/alternatives')
+        @Auth([RoleEnum.ADMIN, RoleEnum.PHARMACIST])
+        findAlternatives(
+        @Param('id', ParseIntPipe) id: number,
+        ) {
+        return this.medicinesService.findAlternatives(id);
+        }
+
+    
+    @Post('interactions/check')
+    @Auth([RoleEnum.ADMIN, RoleEnum.PHARMACIST])
+    checkDrugInteractions(
+    @Body() dto: CheckDrugInteractionsDto,
+    ) {
+    return this.medicinesService.checkDrugInteractions(
+        dto.medicineIds,
+    );
+    }
+
 
     @Post()
     @Auth([

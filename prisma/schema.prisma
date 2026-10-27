@@ -27,17 +27,25 @@ model Category {
   medicines Medicine[]
 }
 
-model Medicine {
-  id        Int       @id @default(autoincrement())
-  name      String
-  barcode   String?   @unique
-  price     Decimal   @db.Decimal(10, 2)
-  stock     Int       @default(0)
-  createdAt DateTime  @default(now())
-  deletedAt DateTime?
 
-  categoryId Int
-  category   Category @relation(fields: [categoryId], references: [id])
+model Medicine {
+  id              Int       @id @default(autoincrement())
+  name            String
+  barcode         String?   @unique
+  price           Decimal   @db.Decimal(10, 2)
+  stock           Int       @default(0)
+
+  // Drug information for AI features
+  activeIngredient String?
+  strength         String?
+  dosageForm       String?
+  rxNormCui        String?
+
+  createdAt       DateTime  @default(now())
+  deletedAt       DateTime?
+
+  categoryId      Int
+  category        Category  @relation(fields: [categoryId], references: [id])
 
   suppliers             MedicineSupplier[]
   inventoryTransactions InventoryTransaction[]
@@ -45,7 +53,9 @@ model Medicine {
 
   @@index([name])
   @@index([categoryId])
+  @@index([activeIngredient])
 }
+
 
 model Supplier {
   id                 Int       @id @default(autoincrement())

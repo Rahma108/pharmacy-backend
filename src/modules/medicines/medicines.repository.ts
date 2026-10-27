@@ -100,4 +100,39 @@ export class MedicineRepository extends BaseRepository<
     },
   });
 }
+
+
+
+async findAlternatives(medicine: {
+  id: number;
+  activeIngredient: string;
+  strength: string;
+  dosageForm: string;
+}) {
+  return this.prisma.medicine.findMany({
+    where: {
+      id: { not: medicine.id },
+      deletedAt: null,
+      activeIngredient: {
+        equals: medicine.activeIngredient,
+        mode: 'insensitive',
+      },
+      strength: {
+        equals: medicine.strength,
+        mode: 'insensitive',
+      },
+      dosageForm: {
+        equals: medicine.dosageForm,
+        mode: 'insensitive',
+      },
+    },
+    include: {
+      category: true,
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+}
+
 }

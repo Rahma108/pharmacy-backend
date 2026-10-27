@@ -15,6 +15,10 @@ import { BarcodeModule } from './modules/barcode/barcode.module';
 import { BarcodeController } from './modules/barcode/barcode.controller';
 import { BarcodeService } from './modules/barcode/barcode.service';
 import { InvoicesModule } from './modules/invoices/invoices.module';
+import { ReportsModule } from './modules/reports/reports.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { PrescriptionsModule } from './modules/prescriptions/prescriptions.module';
+import { AiReorderModule } from './modules/ai-reorder/ai-reorder.module';
 
 
 @Module({
@@ -34,7 +38,11 @@ import { InvoicesModule } from './modules/invoices/invoices.module';
     InventoryModule,
     SalesModule,
     BarcodeModule,
-    InvoicesModule ,
+    InvoicesModule,
+    ReportsModule,
+    DashboardModule,
+    PrescriptionsModule,
+    AiReorderModule ,
 
    
   
